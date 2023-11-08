@@ -1,65 +1,77 @@
 #include <bits/stdc++.h>
 using namespace std;
-using ll = long long;
- 
- 
-const int N =200003;
-const int bits=30;
-int pref[N][bits];
-int a[N];
-void Buildprefix(int n){ //Builds the prefix sums for each bit
-    for(int i=0; i< n; i++){
-        for(int j=0; j<30; j++){
-            if(a[i]&(1<<j)){
-                pref[i+1][j]=pref[i][j]+1;
-            }
-            else{
-                pref[i+1][j]=pref[i][j];
-            }
-        }
-    }
-}
+
+
+
+
+
 void solve(){
-    int n;
-    cin >> n;
-    for(int i=0; i< n; i++){
-        cin >> a[i];
+    string s;
+    getline(cin,s);
+
+     
+    int n=s.size();
+
+    if(s.size()<10){
+        cout<<"hello"<<endl;
+        cout<<"FALSE"<<endl;
+        
+        return;
     }
-    Buildprefix(n);
-    int q;
-    cin >> q;
-    while(q--){
-        int l, k;
-        cin >> l >> k;
-        if(a[l-1]<k){
-            cout << -1 << '\n';
-            continue;
-        }
-        int lo=l;
-        int hi=n;
-        int ans=l;
-        while(lo<=hi){
-            int s=(lo+hi)/2;
-            int num=0;
-            for(int j=0; j< bits; j++){
-                if(pref[s][j]-pref[l-1][j]==s-l+1){
-                    num+=(1<<j);
-                }
-            }
-            if(num>=k){
-                lo=s+1;
-                ans=max(ans, s);
-            }
-            else hi=s-1;
-        }
-        cout << ans << '\n';
+
+    
+    
+
+    if(s[0]!='0' && s[0]!='7' && s[0]!='8' && s[0]!='9' && s[0]!='+'){
+        
+        cout<<"FALSE"<<endl;
+        return;
+       
     }
+    if(s[0]=='+'){
+        if(s[1]!='9' && s[2]!='1' ){
+            cout<<"FALSE"<<endl;
+            return;
+        }
+        if(s[3]==' '){
+            s=s.substr(4,n);
+
+        }
+        else{
+            s=s.substr(3,n);
+
+        }
+        
+       
+    }
+    else{
+        s=s.substr(1,n);
+
+    }
+    
+
+    cout<<s<<endl;
+
+
+    
+
+
+
+
+
+
+
+
+    
+    
 }
- 
-int main(){
-    int t = 1;
-    cin >> t;
-    while(t--){
-        solve();
-    }
+int32_t main(){
+
+int t;
+cin>>t;
+
+while(t--){
+solve();
+}
+return 0;
 }
