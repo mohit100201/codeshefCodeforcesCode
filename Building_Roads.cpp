@@ -33,8 +33,9 @@ cout<<it<<" ";
 }
 
 class DisjointSet {
-    vector<int> rank, parent, size; 
+    
 public: 
+vector<int> rank, parent, size; 
     DisjointSet(int n) {
         rank.resize(n+1, 0); 
         parent.resize(n+1);
@@ -84,63 +85,43 @@ public:
 
 
 
-void dfs(int i,int j,vector<vector<char>>&grid,vector<vector<int>>&vis){
-    vis[i][j]=1;
-
-    int delx[4]={-1,0,+1,0};
-    int dely[4]={0,+1,0,-1};
-    int n=grid.size();
-    int m=grid[0].size();
-
-    for(int k=0;k<4;k++){
-        int x=i+delx[k];
-        int y=j+dely[k];
-        if(x<0 || x>=n || y<0 || y>=m){
-            continue;
-        }
-
-        if(grid[x][y]=='.' && vis[x][y]==0){
-            dfs(x,y,grid ,vis);
-
-
-        }
-
-
-    }
-
-
-    
-}
-
-
-
 void solve(){
     int n,m;
     cin>>n>>m;
-    vector<vector<char>>grid(n,vector<char>(m));
-    rep(i,0,n){
-        rep(j,0,m){
-            char ch;
-            cin>>ch;
-            grid[i][j]=ch;
-        }
+    DisjointSet ds(n+1);
+    for(int i=0;i<m;i++){
+        int u,v;
+        cin>>u>>v;
+        ds.unionBySize(u,v);
     }
 
-    vector<vector<int>>vis(n,vector<int>(m,0));
-int count=0;
-rep(i,0,n){
-    rep(j,0,m){
-        if(grid[i][j]=='.' && vis[i][j]==0){
-            // cout<<i<<" "<<j<<endl;
-            dfs(i,j,grid,vis);
-            count++;
-        }
-    }
-}
+   set<int>s;
+   for(int i=1;i<=n;i++){
+    
+    s.insert(ds.findUPar(i));
+   }
 
-cout<<count<<endl;
+   cout<<s.size()-1<<endl;
+   vector<int>v;
+   for(auto it:s){
+    v.push_back(it);
+   }
+
+   
+    for(int i=1;i<v.size();i++){
+        cout<<v[0]<<" "<<v[i]<<endl;
+    }
+   
+
+   
+
+
+
 
     
+
+
+
   
  
  

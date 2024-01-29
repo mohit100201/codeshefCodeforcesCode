@@ -84,64 +84,75 @@ public:
 
 
 
-void dfs(int i,int j,vector<vector<char>>&grid,vector<vector<int>>&vis){
-    vis[i][j]=1;
-
-    int delx[4]={-1,0,+1,0};
-    int dely[4]={0,+1,0,-1};
-    int n=grid.size();
-    int m=grid[0].size();
-
-    for(int k=0;k<4;k++){
-        int x=i+delx[k];
-        int y=j+dely[k];
-        if(x<0 || x>=n || y<0 || y>=m){
-            continue;
-        }
-
-        if(grid[x][y]=='.' && vis[x][y]==0){
-            dfs(x,y,grid ,vis);
-
-
-        }
-
-
-    }
-
-
-    
-}
-
-
-
 void solve(){
-    int n,m;
-    cin>>n>>m;
-    vector<vector<char>>grid(n,vector<char>(m));
-    rep(i,0,n){
-        rep(j,0,m){
-            char ch;
-            cin>>ch;
-            grid[i][j]=ch;
-        }
-    }
+vector<int>v1;
+ int n;
+ while(cin>>n){
+    v1.pb(n);
 
-    vector<vector<int>>vis(n,vector<int>(m,0));
-int count=0;
-rep(i,0,n){
-    rep(j,0,m){
-        if(grid[i][j]=='.' && vis[i][j]==0){
-            // cout<<i<<" "<<j<<endl;
-            dfs(i,j,grid,vis);
-            count++;
-        }
-    }
+ } 
+
+int size=v1.size();
+
+int k=v1[size-1];
+
+vector<int>v;
+for(int i=0;i<size-1;i++){
+    v.push_back(v1[i]);
 }
 
-cout<<count<<endl;
 
+
+
+
+
+
+
+ sort(v.begin(),v.end());
+ int ans=0;
+ int i=0;
+ int j=v.size()-1;
+
+
+
+
+
+
+ 
+ 
+
+ while(i<=j){
+
+    if(v[i]==0){
+        i++;
+        continue;
+    }
+
+    if(v[j]==0){
+        j--;
+        continue;
+    }
+   
+    if(v[i]+v[j]>k){
+       
+        
+        ans++;
+        j--;
+    }
+    else {
+       
+       
+        ans++;
+        i++;
+        j--;
+    }
     
-  
+
+ }
+
+ cout<<ans<<endl;
+
+ 
  
  
     

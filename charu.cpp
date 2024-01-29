@@ -84,65 +84,134 @@ public:
 
 
 
-void dfs(int i,int j,vector<vector<char>>&grid,vector<vector<int>>&vis){
-    vis[i][j]=1;
-
-    int delx[4]={-1,0,+1,0};
-    int dely[4]={0,+1,0,-1};
-    int n=grid.size();
-    int m=grid[0].size();
-
-    for(int k=0;k<4;k++){
-        int x=i+delx[k];
-        int y=j+dely[k];
-        if(x<0 || x>=n || y<0 || y>=m){
-            continue;
-        }
-
-        if(grid[x][y]=='.' && vis[x][y]==0){
-            dfs(x,y,grid ,vis);
 
 
-        }
 
 
+vector<bool>done;
+int target,n;
+int dfs(int u,int flow, vector<vector<int>>&g){
+       done[u]=true;
+       if(u==target)return flow;
+       for(int v=0;v<n;v++){
+           if(g[u][v] && !done[v]){
+               int mn=dfs(v,min(flow,g[u][v]),g);
+               if(mn>0){
+                   g[u][v]-=mn;
+                //   cout<<g[u][v]<<endl;
+                   return mn;
+               }
+               
+           }
+       }
+       return 0;
+}
+void travel(int u,vector<vector<int>>&g){
+    done[u]=true;
+    for(int v=0;v<n;v++){
+        if(g[u][v] && !done[v])
+            travel(v,g);
     }
-
-
+}
+vector<int> minimumCut(vector<vector<int>> &g, int s, int t, int N){
+    done=vector<bool>(N,false);
+    target=t;
+     n=N;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            // if(g[j][i])g[i][j]+=g[j][i];
+        }
+    }
+    auto rg=g;
+   
+    for(long long aug=dfs(s,INT_MAX,rg);aug;aug=dfs(s,INT_MAX,rg)){
+        done=vector<bool>(n,false);
+        // for(int i=0;i<n;i++){
+        // for(int j=0;j<n;j++){
+        //     cout<<rg[i][j]<<' ';
+        // }
+        // cout<<endl;
+        // }
+        
+    }
+    done=vector<bool>(n,false);
+    travel(s,rg);
+    vector<int>ans;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            if(g[i][j] && done[i] && !done[j]){
+                ans.push_back(i);
+                ans.push_back(j);
+            }
+        }
+    }
+    if(ans.empty())
+        return {-1};
+    return ans;
     
 }
+
+
 
 
 
 void solve(){
-    int n,m;
-    cin>>n>>m;
-    vector<vector<char>>grid(n,vector<char>(m));
-    rep(i,0,n){
-        rep(j,0,m){
-            char ch;
-            cin>>ch;
-            grid[i][j]=ch;
-        }
-    }
+  
+ int n;
+ cin>>n;
+ int arr[n];
+ input(arr,n);
+ int maxi=INT_MIN;
+ for(int i=0;i<n;i++){
+    maxi=max(maxi,arr[i]);
+ }
+ vector<vector<int>>adj(maxi+1,vector<int>(maxi+1));
 
-    vector<vector<int>>vis(n,vector<int>(m,0));
-int count=0;
-rep(i,0,n){
-    rep(j,0,m){
-        if(grid[i][j]=='.' && vis[i][j]==0){
-            // cout<<i<<" "<<j<<endl;
-            dfs(i,j,grid,vis);
-            count++;
-        }
-    }
-}
+ int e;
+ cin>>e;
+ while(e--){
+    int u,v;
+    cin>>u>>v;
 
-cout<<count<<endl;
+   adj[u][v]=1;
+   adj[v][u]=1;
 
     
-  
+ }
+
+
+
+ int S,D;
+ cin>>S>>D;
+
+ vector<int>ans=minimumCut(adj,S,D,maxi+1);
+
+ set<int>s;
+ for(auto it:ans){
+     if(it!=D) s.insert(it);
+ }
+
+ for(auto it:s){
+    cout<<it<<" ";
+ }cout<<endl;
+
+
  
+
+
+
+
+
+
+ 
+
+ 
+
+
+ 
+
+
+
  
     
     

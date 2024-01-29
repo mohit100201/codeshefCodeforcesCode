@@ -84,64 +84,141 @@ public:
 
 
 
-void dfs(int i,int j,vector<vector<char>>&grid,vector<vector<int>>&vis){
-    vis[i][j]=1;
+void solve(){
+ int n,m;
+ cin>>n>>m;
+ vector<vector<char>>grid(n,vector<char>(m));
 
-    int delx[4]={-1,0,+1,0};
-    int dely[4]={0,+1,0,-1};
-    int n=grid.size();
-    int m=grid[0].size();
+ rep(i,0,n){
+    rep(j,0,m){
+        cin>>grid[i][j];
+    }
+ }
 
+ priority_queue<pair<int,pair<int,int>>,
+ vector<pair<int,pair<int,int>>>,greater<pair<int,pair<int,int>>>>pq;
+ vector<vector<int>>dis(n,vector<int>(m,1e9));
+
+ vector<vector<pair<int,int>>>parent(n,vector<pair<int,int>>(m));
+ rep(i,0,n){
+    rep(j,0,m){
+        parent[i][j]={i,j};
+    }
+ }
+
+ 
+ int sx,sy,dx,dy;
+ rep(i,0,n){
+    rep(j,0,m){
+        if(grid[i][j]=='A'){
+            sx=i;
+            sy=j;
+        }
+
+        if(grid[i][j]=='B'){
+            dx=i;
+            dy=j;
+        }
+
+    }
+ }
+
+ pq.push({0,{dx,dy}});
+ dis[dx][dy]=0;
+
+ while(!pq.empty()){
+    auto it=pq.top();
+    pq.pop();
+    int row=it.second.first;
+    int col=it.second.second;
+   
+    int d=it.first;
+    int delrow[4]={-1,0,1,0};
+    int delcol[4]={0,1,0,-1};
     for(int k=0;k<4;k++){
-        int x=i+delx[k];
-        int y=j+dely[k];
-        if(x<0 || x>=n || y<0 || y>=m){
+        int nrow=row+delrow[k];
+        int ncol=col+delcol[k];
+        
+        if(nrow<0 || nrow>=n || ncol<0 || ncol>=m){
             continue;
         }
 
-        if(grid[x][y]=='.' && vis[x][y]==0){
-            dfs(x,y,grid ,vis);
-
-
+        
+       
+        if(grid[nrow][ncol]=='.' || grid[nrow][ncol]=='A'){
+            
+            
+            int newd=d+1;
+        if(dis[nrow][ncol]>newd){
+            parent[nrow][ncol]={row,col};
+            dis[nrow][ncol]=newd;
+            pq.push({newd,{nrow,ncol}});
         }
-
-
+        }
     }
+    
 
+ }
+
+ if(dis[sx][sy]==1e9){
+    cout<<"NO"<<endl;
+ }
+ else{
+    cout<<"YES"<<endl;
+    cout<<dis[sx][sy]<<endl;
+    string ans="";
+    int i=sx;
+    int j=sy;
+
+    // cout<<i<<" "<<j<<endl;
+    // cout<<parent[i][j].first<<" "<<parent[i][j].second<<endl;
+
+    map<pair<int,int>,char>ump;
+    ump[{-1,0}]='D';
+    ump[{1,0}]='U';
+    ump[{0,1}]='L';
+    ump[{0,-1}]='R';
+   
+
+    // rep(i,0,n){
+    //     rep(j,0,m){
+    //         cout<<parent[i][j].first<<" "<<parent[i][j].second<<"    ";
+            
+    //     }cout<<endl<<endl;
+    // }
 
     
-}
 
-
-
-void solve(){
-    int n,m;
-    cin>>n>>m;
-    vector<vector<char>>grid(n,vector<char>(m));
-    rep(i,0,n){
-        rep(j,0,m){
-            char ch;
-            cin>>ch;
-            grid[i][j]=ch;
-        }
+    while(parent[i][j].first!=i || parent[i][j].second!=j){
+        
+        pair<int,int>node={i,j};
+        pair<int,int>par={parent[i][j].first,parent[i][j].second};
+        pair<int,int>p;
+        p.first=node.first-par.first;
+        p.second=node.second-par.second;
+        ans+=ump[p];
+        i=par.first;
+        j=par.second;
+    
     }
 
-    vector<vector<int>>vis(n,vector<int>(m,0));
-int count=0;
-rep(i,0,n){
-    rep(j,0,m){
-        if(grid[i][j]=='.' && vis[i][j]==0){
-            // cout<<i<<" "<<j<<endl;
-            dfs(i,j,grid,vis);
-            count++;
-        }
-    }
-}
+   
 
-cout<<count<<endl;
-
+cout<<ans<<endl;
     
   
+    
+
+    
+ }
+
+ 
+
+ 
+
+ 
+
+
  
  
     

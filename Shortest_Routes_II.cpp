@@ -84,63 +84,46 @@ public:
 
 
 
-void dfs(int i,int j,vector<vector<char>>&grid,vector<vector<int>>&vis){
-    vis[i][j]=1;
-
-    int delx[4]={-1,0,+1,0};
-    int dely[4]={0,+1,0,-1};
-    int n=grid.size();
-    int m=grid[0].size();
-
-    for(int k=0;k<4;k++){
-        int x=i+delx[k];
-        int y=j+dely[k];
-        if(x<0 || x>=n || y<0 || y>=m){
-            continue;
-        }
-
-        if(grid[x][y]=='.' && vis[x][y]==0){
-            dfs(x,y,grid ,vis);
-
-
-        }
-
-
-    }
-
-
-    
-}
-
-
-
 void solve(){
-    int n,m;
-    cin>>n>>m;
-    vector<vector<char>>grid(n,vector<char>(m));
-    rep(i,0,n){
-        rep(j,0,m){
-            char ch;
-            cin>>ch;
-            grid[i][j]=ch;
+
+    int n,m,q;
+    cin>>n>>m>>q;
+
+    vector<vector<int>>grid(n+1,vector<int>(n+1,1000000000*m+1));
+
+    for(int i=1;i<=n;i++){
+        grid[i][i]=0;
+    }
+
+    for(int i=0;i<m;i++){
+        int u,v,w;
+        cin>>u>>v>>w;
+        grid[u][v]=min(grid[u][v],w);
+        grid[v][u]=min(grid[v][u],w);
+
+    }
+
+    for(int k=1;k<=n;k++){
+        for(int i=1;i<=n;i++){
+            for(int j=1;j<=n;j++){
+                grid[i][j]=min(grid[i][j],grid[i][k]+grid[k][j]);
+            }
         }
     }
 
-    vector<vector<int>>vis(n,vector<int>(m,0));
-int count=0;
-rep(i,0,n){
-    rep(j,0,m){
-        if(grid[i][j]=='.' && vis[i][j]==0){
-            // cout<<i<<" "<<j<<endl;
-            dfs(i,j,grid,vis);
-            count++;
+    while(q--){
+        int u,v;
+        cin>>u>>v;
+        if(grid[u][v]==(1000000000*m+1)){
+            cout<<-1<<endl;
+        }
+        else{
+            cout<<grid[u][v]<<endl;
         }
     }
-}
 
-cout<<count<<endl;
 
-    
+
   
  
  

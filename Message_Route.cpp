@@ -84,64 +84,72 @@ public:
 
 
 
-void dfs(int i,int j,vector<vector<char>>&grid,vector<vector<int>>&vis){
-    vis[i][j]=1;
-
-    int delx[4]={-1,0,+1,0};
-    int dely[4]={0,+1,0,-1};
-    int n=grid.size();
-    int m=grid[0].size();
-
-    for(int k=0;k<4;k++){
-        int x=i+delx[k];
-        int y=j+dely[k];
-        if(x<0 || x>=n || y<0 || y>=m){
-            continue;
-        }
-
-        if(grid[x][y]=='.' && vis[x][y]==0){
-            dfs(x,y,grid ,vis);
-
-
-        }
-
-
-    }
-
-
-    
-}
-
-
-
 void solve(){
-    int n,m;
-    cin>>n>>m;
-    vector<vector<char>>grid(n,vector<char>(m));
-    rep(i,0,n){
-        rep(j,0,m){
-            char ch;
-            cin>>ch;
-            grid[i][j]=ch;
-        }
-    }
-
-    vector<vector<int>>vis(n,vector<int>(m,0));
-int count=0;
-rep(i,0,n){
-    rep(j,0,m){
-        if(grid[i][j]=='.' && vis[i][j]==0){
-            // cout<<i<<" "<<j<<endl;
-            dfs(i,j,grid,vis);
-            count++;
-        }
-    }
-}
-
-cout<<count<<endl;
-
+ int n,m;
+ cin>>n>>m;
+ vector<int>adj[n+1];
+ for(int i=0;i<m;i++){
+    int u,v;
+    cin>>u>>v;
     
-  
+    adj[u].push_back(v);
+    adj[v].push_back(u);
+ } 
+
+ priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>pq;
+ vector<int>dis(n+1,1e9);
+ vector<int>parent(n+1);
+
+ for(int i=1;i<=n;i++){
+    parent[i]=i;
+ }
+
+ dis[1]=0;
+ pq.push({0,1});
+
+ 
+
+ while(!pq.empty()){
+    int node=pq.top().second;
+    int d=pq.top().first;
+    pq.pop();
+
+    for(auto it:adj[node]){
+        
+        int newd=d+1;
+        if(newd<dis[it]){
+            dis[it]=newd;
+            parent[it]=node;
+            pq.push({newd,it});
+        }
+    }
+ }
+
+ if(dis[n]==1e9){
+    cout<<"IMPOSSIBLE"<<endl;
+    return ;
+ }
+
+ cout<<dis[n]+1<<endl;
+
+ vector<int>ans;
+ int i=n;
+ while(parent[i]!=i){
+    ans.push_back(i);
+    i=parent[i];
+ }
+ ans.push_back(1);
+ reverse(ans.begin(),ans.end());
+
+ print_vector(ans);
+
+
+
+
+
+ 
+
+
  
  
     
